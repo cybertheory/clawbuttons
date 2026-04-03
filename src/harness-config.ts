@@ -16,9 +16,10 @@ export const HARNESSES: Record<HarnessId, HarnessConfig> = {
     id: 'hermes',
     name: 'Hermes',
     tagName: 'hermes-button',
-    brandColor: '#9B59B6',
-    brandColorHover: '#8B4DA3',
-    brandColorActive: '#7D4494',
+    /** Aligned with hermesbuttons / Hermes Agent (Nous) marketing — electric blue */
+    brandColor: '#2B8CFF',
+    brandColorHover: '#1E7AEB',
+    brandColorActive: '#186BD4',
     cliPrefix: 'hermes -p',
     urlBase: 'https://hermes.ai/run',
     description: 'Persistent personal agent optimized for long-term memory, self-created reusable skills, and research-heavy workflows.',
