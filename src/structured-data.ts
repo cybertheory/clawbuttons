@@ -5,7 +5,6 @@ export interface ButtonMetadata {
   platform: HarnessId;
   command: string;
   fullCommand?: string;
-  skillUrl?: string;
 }
 
 export function discoverButtons(): ButtonMetadata[] {
@@ -17,7 +16,6 @@ export function discoverButtons(): ButtonMetadata[] {
     const harness = HARNESSES[harnessId];
     document.querySelectorAll(harness.tagName).forEach((el) => {
       const command = el.getAttribute('command') || '';
-      const skillUrl = el.getAttribute('skill-url') || undefined;
       const promptFlag = el.getAttribute('prompt-flag');
       const usePrompt = promptFlag !== 'false';
       const fullCommand = usePrompt ? `${harness.cliPrefix} "${command}"` : command;
@@ -26,7 +24,6 @@ export function discoverButtons(): ButtonMetadata[] {
         platform: harnessId,
         command,
         fullCommand,
-        ...(skillUrl && { skillUrl }),
       });
     });
   });
@@ -44,14 +41,10 @@ export function generateStructuredData(): object {
     const entry: Record<string, unknown> = {
       '@type': 'EntryPoint',
       actionPlatform: harness.urlBase,
+      urlTemplate: `${harness.urlBase}?command=${encodeURIComponent(btn.fullCommand || btn.command)}`,
     };
-    if (btn.skillUrl) {
-      entry.urlTemplate = btn.skillUrl;
-    } else {
-      entry.urlTemplate = `${harness.urlBase}?command=${encodeURIComponent(btn.fullCommand || btn.command)}`;
-    }
 
-    const action: Record<string, unknown> = {
+    return {
       '@type': 'Action',
       name: `Run on ${harness.name}: ${btn.command}`,
       description: btn.command,
@@ -62,18 +55,6 @@ export function generateStructuredData(): object {
         text: btn.fullCommand || btn.command,
       },
     };
-
-    if (btn.skillUrl) {
-      action.object = {
-        '@type': 'SoftwareApplication',
-        name: btn.command,
-        downloadUrl: btn.skillUrl,
-        applicationCategory: 'AI Skill',
-        operatingSystem: harness.name,
-      };
-    }
-
-    return action;
   });
 
   return {

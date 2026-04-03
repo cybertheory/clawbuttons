@@ -306,7 +306,7 @@ export class ClawPopupDialog extends HTMLElement {
   private render() {
     if (!this.shadowRoot || !this._options) return;
 
-    const { harnessId, title, description, command, fullCommand, skillUrl } = this._options;
+    const { harnessId, title, description, command, fullCommand } = this._options;
     const tokens = this.resolvePopupTokens();
     const icon = getIcon(harnessId);
     const harnessName = HARNESSES[harnessId].name;
@@ -327,9 +327,7 @@ export class ClawPopupDialog extends HTMLElement {
             <button class="cb-dialog-close" data-action="close" aria-label="Close">${CLOSE_ICON}</button>
           </div>
           <div class="cb-dialog-body">
-            ${skillUrl
-              ? this.renderSkillBody(command, skillUrl, harnessName)
-              : this.renderCommandBody(displayCommand)}
+            ${this.renderCommandBody(displayCommand)}
           </div>
           <div class="cb-dialog-footer">
             <div class="cb-hint">Press <kbd>⌘</kbd>+<kbd>V</kbd> or <kbd>Ctrl</kbd>+<kbd>V</kbd> in your terminal to run</div>
@@ -358,28 +356,6 @@ export class ClawPopupDialog extends HTMLElement {
         <div class="cb-step-num">2</div>
         <div class="cb-step-content">
           <div class="cb-step-label">Paste and run in your terminal</div>
-        </div>
-      </div>
-    `;
-  }
-
-  private renderSkillBody(command: string, skillUrl: string, harnessName: string): string {
-    const fullPrompt = `Install the skill from ${skillUrl} and run ${command}`;
-    return `
-      <div class="cb-step">
-        <div class="cb-step-num">1</div>
-        <div class="cb-step-content">
-          <div class="cb-step-label">Copy this prompt to your clipboard</div>
-          <div class="cb-code-block">
-            <div class="cb-code-text">${this.escapeHtml(fullPrompt)}</div>
-            <button class="cb-copy-btn" data-action="copy" data-command="${this.escapeAttr(fullPrompt)}">${COPY_ICON}<span>Copy</span></button>
-          </div>
-        </div>
-      </div>
-      <div class="cb-step">
-        <div class="cb-step-num">2</div>
-        <div class="cb-step-content">
-          <div class="cb-step-label">Paste into a ${harnessName} session — the agent will fetch the skill and set it up for you</div>
         </div>
       </div>
     `;

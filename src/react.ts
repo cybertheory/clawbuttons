@@ -22,7 +22,6 @@ export interface ClawButtonProps extends ClawButtonOptions {
 function createHarnessButton(harnessId: HarnessId, displayName: string): FC<Omit<ClawButtonProps, 'harnessId'>> {
   const Component: FC<Omit<ClawButtonProps, 'harnessId'>> = ({
     command,
-    skillUrl,
     theme = 'branded',
     size = 'md',
     variant = 'filled',
@@ -30,7 +29,6 @@ function createHarnessButton(harnessId: HarnessId, displayName: string): FC<Omit
     popup = true,
     promptFlag = true,
     onCopy,
-    onDownload,
     popupTitle,
     popupDescription,
     className,
@@ -84,7 +82,6 @@ function createHarnessButton(harnessId: HarnessId, displayName: string): FC<Omit
 
       (el as any).options = {
         command,
-        skillUrl,
         theme,
         size,
         variant,
@@ -92,11 +89,10 @@ function createHarnessButton(harnessId: HarnessId, displayName: string): FC<Omit
         popup,
         promptFlag,
         onCopy,
-        onDownload,
         popupTitle,
         popupDescription,
       };
-    }, [command, skillUrl, theme, size, variant, shape, popup, promptFlag, onCopy, onDownload, popupTitle, popupDescription]);
+    }, [command, theme, size, variant, shape, popup, promptFlag, onCopy, popupTitle, popupDescription]);
 
     return createElement('div', {
       ref: containerRef,

@@ -2,7 +2,6 @@ import type { Theme, Size, Variant, Shape } from './types';
 
 interface ClawButtonAttributes {
   command?: string;
-  'skill-url'?: string;
   theme?: Theme;
   size?: Size;
   variant?: Variant;

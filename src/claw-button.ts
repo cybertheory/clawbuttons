@@ -241,7 +241,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
   const ICON = getIcon(harness.id);
 
   class ClawButton extends HTMLElement {
-    static observedAttributes = ['command', 'skill-url', 'theme', 'size', 'variant', 'shape', 'popup', 'prompt-flag', 'popup-title', 'popup-description'];
+    static observedAttributes = ['command', 'theme', 'size', 'variant', 'shape', 'popup', 'prompt-flag', 'popup-title', 'popup-description'];
 
     /** @internal */ _options: ClawButtonOptions = {
       command: '',
@@ -294,7 +294,6 @@ export function createClawButtonClass(harness: HarnessConfig) {
 
     /** @internal */ syncFromAttributes() {
       const command = this.getAttribute('command');
-      const skillUrl = this.getAttribute('skill-url');
       const theme = this.getAttribute('theme') as Theme | null;
       const size = this.getAttribute('size') as Size | null;
       const variant = this.getAttribute('variant') as Variant | null;
@@ -305,7 +304,6 @@ export function createClawButtonClass(harness: HarnessConfig) {
       const popupDescription = this.getAttribute('popup-description');
 
       if (command !== null) this._options.command = command;
-      if (skillUrl !== null) this._options.skillUrl = skillUrl;
       if (theme) this._options.theme = theme;
       if (size) this._options.size = size;
       if (variant) this._options.variant = variant;
@@ -317,7 +315,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
     }
 
     /** @internal */ updateLightDOM() {
-      const { command, skillUrl } = this._options;
+      const { command } = this._options;
       const fullCommand = this.getFullCommand();
 
       this.setAttribute('role', 'button');
@@ -341,13 +339,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
       link.setAttribute('data-platform', harness.id);
       link.setAttribute('data-command', command);
       link.setAttribute('data-full-command', fullCommand);
-      if (skillUrl) {
-        link.href = skillUrl;
-        link.setAttribute('data-skill-url', skillUrl);
-      } else {
-        link.href = `${harness.urlBase}?command=${encodeURIComponent(fullCommand)}`;
-        link.removeAttribute('data-skill-url');
-      }
+      link.href = `${harness.urlBase}?command=${encodeURIComponent(fullCommand)}`;
     }
 
     /** @internal */ getResolvedTheme(): Theme {
@@ -422,7 +414,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
     }
 
     /** @internal */ handleClick() {
-      const { popup, command, skillUrl, popupTitle, popupDescription } = this._options;
+      const { popup, command, popupTitle, popupDescription } = this._options;
       const fullCommand = this.getFullCommand();
 
       this.dispatchEvent(new CustomEvent('cb-open', {
@@ -448,12 +440,9 @@ export function createClawButtonClass(harness: HarnessConfig) {
         harnessId: harness.id,
         theme: this.getResolvedTheme(),
         title: popupTitle || `Run on ${harness.name}`,
-        description: popupDescription || (skillUrl
-          ? `Install the skill and run the command in ${harness.name}.`
-          : `Execute this command in your terminal to get started with ${harness.name}.`),
+        description: popupDescription || `Execute this command in your terminal to get started with ${harness.name}.`,
         command,
         fullCommand,
-        skillUrl,
         onCopy: (cmd) => {
           this._options.onCopy?.(cmd);
           recordAgentPreference(harness.id);

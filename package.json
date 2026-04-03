@@ -1,6 +1,6 @@
 {
   "name": "clawbuttons",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Drop-in \"Run on OpenClaw\", \"Run on Hermes\", \"Run on IronClaw\" and more buttons for any website or framework — covering the full OpenClaw-style harness ecosystem",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

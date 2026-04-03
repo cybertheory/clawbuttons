@@ -19,8 +19,6 @@ export interface HarnessConfig {
 export interface ClawButtonOptions {
   /** The command or skill to run (e.g. "/my-skill --flag") */
   command: string;
-  /** URL to a downloadable skill package (.zip, SKILL.md, or plugin.json) */
-  skillUrl?: string;
   /** Theme variant. Default: 'branded' */
   theme?: Theme;
   /** Button size. Default: 'md' */
@@ -35,8 +33,6 @@ export interface ClawButtonOptions {
   promptFlag?: boolean;
   /** Callback fired after the command is copied to clipboard */
   onCopy?: (command: string) => void;
-  /** Callback fired when the skill package is downloaded */
-  onDownload?: (url: string) => void;
   /** Custom popup title */
   popupTitle?: string;
   /** Custom popup description */
@@ -50,7 +46,6 @@ export interface PopupOptions {
   description?: string;
   command: string;
   fullCommand?: string;
-  skillUrl?: string;
   onCopy?: (command: string) => void;
   onClose?: () => void;
 }
