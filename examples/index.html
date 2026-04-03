@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>clawbuttons — Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --claw-red: #E74C3C;
+      --claw-red-glow: rgba(231, 76, 60, 0.15);
+      --hermes-purple: #9B59B6;
+      --hermes-glow: rgba(155, 89, 182, 0.15);
+      --iron-steel: #5D6D7E;
+      --nano-teal: #1ABC9C;
+      --zero-orange: #E67E22;
+      --harness-green: #27AE60;
+      --claude-terra: #D4795C;
+      --dark-1: #0C0A09;
+      --dark-2: #1C1917;
+      --dark-3: #292524;
+      --dark-border: #3D3530;
+      --light-1: #FAFAF9;
+      --light-border: #E7E5E4;
+      --muted: #A8A29E;
+      --muted-2: #78716C;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--dark-1);
+      color: #F5F0EB;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: 72px 24px 56px;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, var(--claw-red-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px;
+      background: rgba(231,76,60,0.1);
+      border: 1px solid rgba(231,76,60,0.2);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 600; color: var(--claw-red);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero-pill .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--claw-red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero h1 {
+      font-size: clamp(36px,6vw,56px); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.1;
+      margin-bottom: 16px; position: relative;
+    }
+    .hero h1 .accent { color: var(--claw-red); }
+    .hero .subtitle {
+      font-size: 17px; color: var(--muted);
+      max-width: 580px; margin: 0 auto; line-height: 1.6;
+    }
+    .hero-buttons {
+      display: flex; justify-content: center;
+      gap: 12px; margin-top: 32px; flex-wrap: wrap;
+    }
+
+    .hero-install {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      margin-top: 24px;
+      background: var(--dark-2);
+      border: 1px solid var(--dark-border);
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-install-text {
+      padding: 11px 14px;
+      color: var(--muted);
+      user-select: all;
+      white-space: nowrap;
+    }
+    .hero-install-text span { color: #F5F0EB; }
+    .hero-install-copy {
+      display: flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border: none;
+      border-left: 1px solid var(--dark-border);
+      background: transparent; color: var(--muted); cursor: pointer;
+      transition: background 0.15s, color 0.15s; flex-shrink: 0;
+    }
+    .hero-install-copy:hover { background: var(--dark-3); color: #F5F0EB; }
+    .hero-install-copy svg { width: 15px; height: 15px; }
+
+    .hero-notice {
+      position: relative;
+      display: inline-flex; align-items: flex-start; gap: 10px;
+      max-width: 580px; margin: 28px auto 0;
+      padding: 14px 18px;
+      background: rgba(231, 76, 60, 0.06);
+      border: 1px solid rgba(231, 76, 60, 0.15);
+      border-radius: 12px; text-align: left;
+      font-size: 13px; line-height: 1.55; color: var(--muted);
+    }
+    .hero-notice-icon { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; color: var(--claw-red); opacity: 0.8; }
+    .hero-notice strong { color: #F5F0EB; font-weight: 600; }
+    .hero-notice code {
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      padding: 1px 6px; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--claw-red);
+    }
+
+    .container { max-width: 1040px; margin: 0 auto; padding: 0 24px 96px; }
+
+    .section { margin-top: 64px; }
+    .section-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+    .section-tag {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--claw-red); background: var(--claw-red-glow);
+      padding: 3px 10px; border-radius: 4px;
+    }
+    .section-tag--hermes { color: var(--hermes-purple); background: var(--hermes-glow); }
+    .section-tag--iron { color: var(--iron-steel); background: rgba(93,109,126,0.15); }
+    .section-tag--nano { color: var(--nano-teal); background: rgba(26,188,156,0.15); }
+    .section-tag--zero { color: var(--zero-orange); background: rgba(230,126,34,0.15); }
+    .section-tag--harness { color: var(--harness-green); background: rgba(39,174,96,0.15); }
+    .section-tag--claude { color: var(--claude-terra); background: rgba(212,121,92,0.15); }
+    .section-title { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+    .section-desc { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+
+    .card {
+      background: var(--dark-2); border: 1px solid var(--dark-border);
+      border-radius: 14px; padding: 24px;
+    }
+    .card--light { background: var(--light-1); border-color: var(--light-border); }
+    .card-label {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+    }
+    .card--light .card-label { color: var(--muted-2); }
+
+    .card-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .card-row + .card-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--dark-border); }
+    .card--light .card-row + .card-row { border-top-color: var(--light-border); }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--muted); min-width: 50px;
+    }
+    .card--light .label { color: var(--muted-2); }
+
+    .log-section { margin-top: 64px; }
+    .log-panel { background: var(--dark-2); border: 1px solid var(--dark-border); border-radius: 14px; overflow: hidden; }
+    .log-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--dark-border); }
+    .log-header-title { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; color: var(--muted); }
+    .log-header-title .dot-green { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 8px; vertical-align: middle; }
+    .log-clear { padding: 4px 12px; background: transparent; border: 1px solid var(--dark-border); color: var(--muted); border-radius: 6px; font-family: inherit; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+    .log-clear:hover { border-color: var(--muted); color: #F5F0EB; }
+    .log-body { padding: 16px 20px; max-height: 200px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.8; scrollbar-width: thin; scrollbar-color: var(--dark-border) transparent; }
+    .log-empty { color: var(--muted); font-style: italic; }
+    .log-entry { display: flex; gap: 10px; }
+    .log-time { color: var(--muted); flex-shrink: 0; }
+    .log-event { color: var(--claw-red); font-weight: 500; flex-shrink: 0; }
+    .log-detail { color: #F5F0EB; word-break: break-all; }
+
+    .code-section { margin-top: 64px; }
+    .code-tabs { display: flex; gap: 2px; margin-bottom: -1px; position: relative; z-index: 1; }
+    .code-tab {
+      padding: 10px 18px; background: transparent;
+      border: 1px solid transparent; border-bottom: none;
+      color: var(--muted); font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; cursor: pointer;
+      border-radius: 8px 8px 0 0; transition: all 0.15s;
+    }
+    .code-tab[data-active="true"] { background: var(--dark-2); border-color: var(--dark-border); color: #F5F0EB; }
+    .code-tab:hover:not([data-active="true"]) { color: #F5F0EB; }
+    .code-block {
+      background: var(--dark-2); border: 1px solid var(--dark-border);
+      border-radius: 0 14px 14px 14px; padding: 20px 24px;
+      font-family: 'JetBrains Mono', monospace; font-size: 13px;
+      line-height: 1.7; overflow-x: auto; white-space: pre;
+      color: #F5F0EB; display: none;
+    }
+    .code-block[data-active="true"] { display: block; }
+    .code-block .kw { color: var(--claw-red); }
+    .code-block .str { color: #A8A29E; }
+    .code-block .cmt { color: #57534E; }
+    .code-block .tag { color: #78716C; }
+    .code-block .fn { color: #FCD34D; }
+
+    .footer { text-align: center; padding: 48px 24px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--dark-border); }
+    .footer a { color: var(--claw-red); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <script src="../dist/index.global.js"></script>
+
+  <!-- ═══ HERO ═══ -->
+  <header class="hero">
+    <div class="hero-pill"><span class="dot"></span> v1.0.0</div>
+    <h1><span class="accent">claw</span>buttons</h1>
+    <p class="subtitle">
+      Drop-in buttons for the entire OpenClaw harness ecosystem — OpenClaw, Hermes, IronClaw, NanoClaw, ZeroClaw, OpenHarness, and ClaudeClaw.
+      Framework-agnostic Web Components with zero dependencies.
+    </p>
+    <div class="hero-install">
+      <div class="hero-install-text">$ <span>npm i clawbuttons</span></div>
+      <button class="hero-install-copy" onclick="navigator.clipboard.writeText('npm i clawbuttons').then(()=>{this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><polyline points=&quot;20 6 9 17 4 12&quot;/></svg>';this.style.color='#22c55e';setTimeout(()=>{this.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><rect x=&quot;9&quot; y=&quot;9&quot; width=&quot;13&quot; height=&quot;13&quot; rx=&quot;2&quot;/><path d=&quot;M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1&quot;/></svg>';this.style.color='';},1500);})" aria-label="Copy install command"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+    </div>
+    <div class="hero-buttons">
+      <openclaw-button command="Deploy the full-stack app with database migrations" theme="branded" size="lg"></openclaw-button>
+      <hermes-button command="/research deep-dive on React Server Components" theme="branded" size="lg" variant="outline"></hermes-button>
+    </div>
+    <div class="hero-notice">
+      <svg class="hero-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <span>
+        <strong>Agent &amp; crawler friendly.</strong>
+        Every button embeds a hidden crawlable <code>&lt;a&gt;</code> link in the light DOM — skill URLs are directly discoverable by scrapers, search engines, and AI&nbsp;agents.
+        Call <code>injectStructuredData()</code> to emit Schema.org JSON&#8209;LD for the whole page.
+      </span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ═══ ALL HARNESSES ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Harnesses</span>
+        <h2 class="section-title">All 7 Supported Harnesses</h2>
+      </div>
+      <p class="section-desc">One button per harness — each with its own brand color, icon, and CLI invocation pattern.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">The Full Lineup</div>
+          <div class="card-row">
+            <openclaw-button command="Scaffold a Next.js app with Tailwind and Prisma" theme="branded"></openclaw-button>
+          </div>
+          <div class="card-row">
+            <hermes-button command="/research competitive landscape for AI dev tools" theme="branded"></hermes-button>
+          </div>
+          <div class="card-row">
+            <ironclaw-button command="Audit the codebase for security vulnerabilities" theme="branded"></ironclaw-button>
+          </div>
+          <div class="card-row">
+            <nanoclaw-button command="Run the test suite in an isolated container" theme="branded"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <zeroclaw-button command="Profile and optimize hot paths in the Rust backend" theme="branded"></zeroclaw-button>
+          </div>
+          <div class="card-row">
+            <openharness-button command="Set up a Python agent with 43 tools" theme="branded"></openharness-button>
+          </div>
+          <div class="card-row">
+            <claudeclaw-button command="Deploy the daemon with Discord and Telegram channels" theme="branded"></claudeclaw-button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Outline Variants</div>
+          <div class="card-row">
+            <openclaw-button command="/deploy" theme="branded" variant="outline"></openclaw-button>
+          </div>
+          <div class="card-row">
+            <hermes-button command="/memorize" theme="branded" variant="outline"></hermes-button>
+          </div>
+          <div class="card-row">
+            <ironclaw-button command="/secure-scan" theme="branded" variant="outline"></ironclaw-button>
+          </div>
+          <div class="card-row">
+            <nanoclaw-button command="/sandbox-test" theme="branded" variant="outline"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <zeroclaw-button command="/wasm-bench" theme="branded" variant="outline"></zeroclaw-button>
+          </div>
+          <div class="card-row">
+            <openharness-button command="/lightweight-agent" theme="branded" variant="outline"></openharness-button>
+          </div>
+          <div class="card-row">
+            <claudeclaw-button command="/claude-daemon" theme="branded" variant="outline"></claudeclaw-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ VARIANTS ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Variant</span>
+        <h2 class="section-title">Filled / Outline / Ghost</h2>
+      </div>
+      <p class="section-desc">Three visual variants per button. Use <code style="color:var(--claw-red)">variant="outline"</code> or <code style="color:var(--claw-red)">variant="ghost"</code> for secondary actions.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">OpenClaw</div>
+          <div class="card-row">
+            <span class="label">filled</span>
+            <openclaw-button command="Set up CI/CD with GitHub Actions" theme="branded" variant="filled"></openclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">outline</span>
+            <openclaw-button command="Set up CI/CD with GitHub Actions" theme="branded" variant="outline"></openclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">ghost</span>
+            <openclaw-button command="Set up CI/CD with GitHub Actions" theme="branded" variant="ghost"></openclaw-button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Hermes</div>
+          <div class="card-row">
+            <span class="label">filled</span>
+            <hermes-button command="/weekly-research-digest" theme="branded" variant="filled"></hermes-button>
+          </div>
+          <div class="card-row">
+            <span class="label">outline</span>
+            <hermes-button command="/weekly-research-digest" theme="branded" variant="outline"></hermes-button>
+          </div>
+          <div class="card-row">
+            <span class="label">ghost</span>
+            <hermes-button command="/weekly-research-digest" theme="branded" variant="ghost"></hermes-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SHAPES ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Shape</span>
+        <h2 class="section-title">Rounded / Pill / Square</h2>
+      </div>
+      <p class="section-desc">Control border radius with <code style="color:var(--claw-red)">shape="pill"</code> or <code style="color:var(--claw-red)">shape="square"</code>.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">NanoClaw</div>
+          <div class="card-row">
+            <span class="label">rounded</span>
+            <nanoclaw-button command="Run isolated tests" theme="branded" shape="rounded"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">pill</span>
+            <nanoclaw-button command="Run isolated tests" theme="branded" shape="pill"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">square</span>
+            <nanoclaw-button command="Run isolated tests" theme="branded" shape="square"></nanoclaw-button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">ZeroClaw</div>
+          <div class="card-row">
+            <span class="label">rounded</span>
+            <zeroclaw-button command="Benchmark WASM runtime" theme="branded" shape="rounded"></zeroclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">pill</span>
+            <zeroclaw-button command="Benchmark WASM runtime" theme="branded" shape="pill"></zeroclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">square</span>
+            <zeroclaw-button command="Benchmark WASM runtime" theme="branded" shape="square"></zeroclaw-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SIZES ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Size</span>
+        <h2 class="section-title">Small / Medium / Large</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">IronClaw — sizes</div>
+          <div class="card-row">
+            <span class="label">sm</span>
+            <ironclaw-button command="Security audit" theme="branded" size="sm"></ironclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">md</span>
+            <ironclaw-button command="Security audit" theme="branded" size="md"></ironclaw-button>
+          </div>
+          <div class="card-row">
+            <span class="label">lg</span>
+            <ironclaw-button command="Security audit" theme="branded" size="lg"></ironclaw-button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">OpenHarness — sizes</div>
+          <div class="card-row">
+            <span class="label">sm</span>
+            <openharness-button command="Spin up agent" theme="branded" size="sm"></openharness-button>
+          </div>
+          <div class="card-row">
+            <span class="label">md</span>
+            <openharness-button command="Spin up agent" theme="branded" size="md"></openharness-button>
+          </div>
+          <div class="card-row">
+            <span class="label">lg</span>
+            <openharness-button command="Spin up agent" theme="branded" size="lg"></openharness-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ DARK THEME ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Theme</span>
+        <h2 class="section-title">Dark</h2>
+      </div>
+      <p class="section-desc">For dark UIs — dark surface with colored accents per harness.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">Dark theme across harnesses</div>
+          <div class="card-row">
+            <openclaw-button command="Deploy to production" theme="dark"></openclaw-button>
+            <hermes-button command="/research" theme="dark"></hermes-button>
+          </div>
+          <div class="card-row">
+            <ironclaw-button command="Secure audit" theme="dark"></ironclaw-button>
+            <nanoclaw-button command="Container test" theme="dark"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <zeroclaw-button command="WASM benchmark" theme="dark"></zeroclaw-button>
+            <openharness-button command="Run agent" theme="dark"></openharness-button>
+          </div>
+          <div class="card-row">
+            <claudeclaw-button command="Start daemon" theme="dark"></claudeclaw-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ LIGHT THEME ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Theme</span>
+        <h2 class="section-title">Light</h2>
+      </div>
+      <p class="section-desc">For light UIs — white surface with colored accents.</p>
+      <div class="grid">
+        <div class="card card--light">
+          <div class="card-label">Light theme across harnesses</div>
+          <div class="card-row">
+            <openclaw-button command="Deploy to production" theme="light"></openclaw-button>
+            <hermes-button command="/research" theme="light"></hermes-button>
+          </div>
+          <div class="card-row">
+            <ironclaw-button command="Secure audit" theme="light"></ironclaw-button>
+            <nanoclaw-button command="Container test" theme="light"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <zeroclaw-button command="WASM benchmark" theme="light"></zeroclaw-button>
+            <openharness-button command="Run agent" theme="light"></openharness-button>
+          </div>
+          <div class="card-row">
+            <claudeclaw-button command="Start daemon" theme="light"></claudeclaw-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SIDE BY SIDE ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Pairing</span>
+        <h2 class="section-title">Side by Side</h2>
+      </div>
+      <p class="section-desc">Mix different harness buttons to let users choose their preferred agent.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">Primary + Secondary</div>
+          <div class="card-row">
+            <openclaw-button command="Full deploy pipeline" theme="branded"></openclaw-button>
+            <nanoclaw-button command="Quick isolated run" theme="branded" variant="outline"></nanoclaw-button>
+          </div>
+          <div class="card-row">
+            <hermes-button command="/deep-research" theme="branded"></hermes-button>
+            <claudeclaw-button command="/quick-review" theme="branded" variant="outline"></claudeclaw-button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Three-way choice</div>
+          <div class="card-row">
+            <openclaw-button command="Run task" theme="branded"></openclaw-button>
+            <ironclaw-button command="Run task" theme="branded" variant="outline"></ironclaw-button>
+            <zeroclaw-button command="Run task" theme="branded" variant="ghost"></zeroclaw-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SKILL URL ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">Skills</span>
+        <h2 class="section-title">Skill URL Support</h2>
+      </div>
+      <p class="section-desc">Attach a <code style="color:var(--claw-red)">skill-url</code> to any button — the popup guides users through skill installation.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">With skill packages</div>
+          <div class="card-row">
+            <openclaw-button command="/code-review" skill-url="https://example.com/code-review-skill.zip" theme="branded"></openclaw-button>
+          </div>
+          <div class="card-row">
+            <hermes-button command="/research-assistant" skill-url="https://example.com/research-skill.zip" theme="branded"></hermes-button>
+          </div>
+          <div class="card-row">
+            <openharness-button command="/lint-agent" skill-url="https://example.com/lint-agent.zip" theme="branded"></openharness-button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ PROGRAMMATIC ═══ -->
+    <section class="section">
+      <div class="section-header">
+        <span class="section-tag">API</span>
+        <h2 class="section-title">Programmatic</h2>
+      </div>
+      <p class="section-desc">Buttons created via <code style="color:var(--claw-red)">ClawButtons.createButton(harnessId, options)</code>.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="card-label">Created via JavaScript</div>
+          <div class="card-row" id="js-target"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ EVENT LOG ═══ -->
+    <section class="log-section">
+      <div class="section-header">
+        <span class="section-tag">Events</span>
+        <h2 class="section-title">Live Event Log</h2>
+      </div>
+      <p class="section-desc">Click any button above — all <code style="color:var(--claw-red)">cb-copy</code>, <code style="color:var(--claw-red)">cb-open</code>, and <code style="color:var(--claw-red)">cb-close</code> events are logged here.</p>
+      <div class="log-panel">
+        <div class="log-header">
+          <span class="log-header-title"><span class="dot-green"></span>Event listener</span>
+          <button class="log-clear" id="log-clear">Clear</button>
+        </div>
+        <div class="log-body" id="log-body">
+          <div class="log-empty">Click a button to see events...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ CODE EXAMPLES ═══ -->
+    <section class="code-section">
+      <div class="section-header">
+        <span class="section-tag">Code</span>
+        <h2 class="section-title">Quick Start</h2>
+      </div>
+      <div class="code-tabs">
+        <button class="code-tab" data-active="true" data-tab="html">HTML</button>
+        <button class="code-tab" data-tab="react">React</button>
+        <button class="code-tab" data-tab="vue">Vue</button>
+        <button class="code-tab" data-tab="svelte">Svelte</button>
+      </div>
+      <div class="code-block" data-tab="html" data-active="true"><span class="cmt">&lt;!-- CDN — no build step --&gt;</span>
+<span class="tag">&lt;script</span> <span class="kw">src</span>=<span class="str">"https://unpkg.com/clawbuttons"</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="cmt">&lt;!-- OpenClaw button --&gt;</span>
+<span class="tag">&lt;openclaw-button</span>
+  <span class="kw">command</span>=<span class="str">"Deploy the full-stack app"</span>
+<span class="tag">&gt;&lt;/openclaw-button&gt;</span>
+
+<span class="cmt">&lt;!-- Hermes button with skill URL --&gt;</span>
+<span class="tag">&lt;hermes-button</span>
+  <span class="kw">command</span>=<span class="str">"/research-agent"</span>
+  <span class="kw">skill-url</span>=<span class="str">"https://example.com/skill.zip"</span>
+  <span class="kw">variant</span>=<span class="str">"outline"</span>
+<span class="tag">&gt;&lt;/hermes-button&gt;</span>
+
+<span class="cmt">&lt;!-- Any harness works the same way --&gt;</span>
+<span class="tag">&lt;ironclaw-button</span> <span class="kw">command</span>=<span class="str">"Audit security"</span><span class="tag">&gt;&lt;/ironclaw-button&gt;</span>
+<span class="tag">&lt;nanoclaw-button</span> <span class="kw">command</span>=<span class="str">"Container test"</span><span class="tag">&gt;&lt;/nanoclaw-button&gt;</span>
+<span class="tag">&lt;zeroclaw-button</span> <span class="kw">command</span>=<span class="str">"WASM benchmark"</span><span class="tag">&gt;&lt;/zeroclaw-button&gt;</span>
+<span class="tag">&lt;openharness-button</span> <span class="kw">command</span>=<span class="str">"Run agent"</span><span class="tag">&gt;&lt;/openharness-button&gt;</span>
+<span class="tag">&lt;claudeclaw-button</span> <span class="kw">command</span>=<span class="str">"Start daemon"</span><span class="tag">&gt;&lt;/claudeclaw-button&gt;</span></div>
+      <div class="code-block" data-tab="react"><span class="kw">import</span> {
+  <span class="fn">OpenClawButton</span>,
+  <span class="fn">HermesButton</span>,
+  <span class="fn">IronClawButton</span>,
+  <span class="fn">NanoClawButton</span>,
+  <span class="fn">ZeroClawButton</span>,
+  <span class="fn">OpenHarnessButton</span>,
+  <span class="fn">ClaudeClawButton</span>,
+} <span class="kw">from</span> <span class="str">'clawbuttons/react'</span>;
+
+<span class="kw">function</span> <span class="fn">App</span>() {
+  <span class="kw">return</span> (
+    &lt;&gt;
+      &lt;<span class="fn">OpenClawButton</span>
+        <span class="kw">command</span>=<span class="str">"Deploy the full-stack app"</span>
+        <span class="kw">onCopy</span>={(<span class="str">cmd</span>) =&gt; console.<span class="fn">log</span>(<span class="str">'Copied:'</span>, cmd)}
+      /&gt;
+      &lt;<span class="fn">HermesButton</span>
+        <span class="kw">command</span>=<span class="str">"/deep-research"</span>
+        <span class="kw">variant</span>=<span class="str">"outline"</span>
+      /&gt;
+      &lt;<span class="fn">IronClawButton</span>
+        <span class="kw">command</span>=<span class="str">"Security audit"</span>
+        <span class="kw">theme</span>=<span class="str">"dark"</span>
+      /&gt;
+    &lt;/&gt;
+  );
+}</div>
+      <div class="code-block" data-tab="vue"><span class="tag">&lt;script setup&gt;</span>
+<span class="kw">import</span> { <span class="fn">ClawButtonsPlugin</span> } <span class="kw">from</span> <span class="str">'clawbuttons/vue'</span>;
+
+<span class="kw">function</span> <span class="fn">onCopy</span>(e) {
+  console.<span class="fn">log</span>(<span class="str">'Copied:'</span>, e.detail.command);
+}
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;template&gt;</span>
+  <span class="tag">&lt;openclaw-button</span>
+    <span class="kw">command</span>=<span class="str">"Deploy the full-stack app"</span>
+    <span class="kw">@cb-copy</span>=<span class="str">"onCopy"</span>
+  <span class="tag">/&gt;</span>
+  <span class="tag">&lt;hermes-button</span>
+    <span class="kw">command</span>=<span class="str">"/research"</span>
+    <span class="kw">variant</span>=<span class="str">"outline"</span>
+  <span class="tag">/&gt;</span>
+<span class="tag">&lt;/template&gt;</span></div>
+      <div class="code-block" data-tab="svelte"><span class="tag">&lt;script&gt;</span>
+  <span class="kw">import</span> <span class="str">'clawbuttons'</span>;
+
+  <span class="kw">function</span> <span class="fn">handleCopy</span>(e) {
+    console.<span class="fn">log</span>(<span class="str">'Copied:'</span>, e.detail.command);
+  }
+<span class="tag">&lt;/script&gt;</span>
+
+<span class="tag">&lt;openclaw-button</span>
+  <span class="kw">command</span>=<span class="str">"Deploy the full-stack app"</span>
+  <span class="kw">on:cb-copy</span>={<span class="fn">handleCopy</span>}
+<span class="tag">/&gt;</span>
+
+<span class="tag">&lt;hermes-button</span>
+  <span class="kw">command</span>=<span class="str">"/research"</span>
+  <span class="kw">variant</span>=<span class="str">"ghost"</span>
+<span class="tag">/&gt;</span></div>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <a href="https://github.com/cybertheory/clawbuttons">clawbuttons</a> — MIT License
+  </footer>
+
+  <script>
+    const target = document.getElementById('js-target');
+
+    const ocBtn = ClawButtons.createButton('openclaw', {
+      command: 'Set up Docker Compose with PostgreSQL, Redis, and the app service',
+      theme: 'branded',
+    });
+    target.appendChild(ocBtn);
+
+    const hmBtn = ClawButtons.createButton('hermes', {
+      command: '/code-review',
+      theme: 'branded',
+      variant: 'outline',
+      skillUrl: 'https://example.com/code-review-skill.zip',
+    });
+    target.appendChild(hmBtn);
+
+    const logBody = document.getElementById('log-body');
+    const logClear = document.getElementById('log-clear');
+    let hasLogs = false;
+
+    function addLog(eventName, detail) {
+      if (!hasLogs) { logBody.innerHTML = ''; hasLogs = true; }
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      const detailStr = detail ? JSON.stringify(detail) : '—';
+      entry.innerHTML = `<span class="log-time">${time}</span><span class="log-event">${eventName}</span><span class="log-detail">${detailStr}</span>`;
+      logBody.appendChild(entry);
+      logBody.scrollTop = logBody.scrollHeight;
+    }
+
+    ['cb-copy', 'cb-open', 'cb-close'].forEach(event => {
+      document.addEventListener(event, (e) => addLog(event, e.detail));
+    });
+
+    logClear.addEventListener('click', () => {
+      logBody.innerHTML = '<div class="log-empty">Click a button to see events...</div>';
+      hasLogs = false;
+    });
+
+    document.querySelectorAll('.code-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.code-tab').forEach(t => t.dataset.active = 'false');
+        document.querySelectorAll('.code-block').forEach(b => b.dataset.active = 'false');
+        tab.dataset.active = 'true';
+        document.querySelector(`.code-block[data-tab="${tabName}"]`).dataset.active = 'true';
+      });
+    });
+  </script>
+
+</body>
+</html>
