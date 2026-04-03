@@ -1,4 +1,5 @@
 import type { ClawButtonOptions, Theme, Size, Variant, Shape, HarnessId, HarnessConfig } from './types';
+import { recordAgentPreference } from './agent-preferences';
 import { getIcon } from './icons';
 import { resolveTheme, themeToCSS, SIZE_MAP, SHAPE_MAP, getBrandColor, getBrandColorHover, getBrandColorActive } from './themes';
 import { showPopup } from './popup-dialog';
@@ -433,6 +434,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
       if (popup === false) {
         navigator.clipboard.writeText(fullCommand).then(() => {
           this._options.onCopy?.(fullCommand);
+          recordAgentPreference(harness.id);
           this.dispatchEvent(new CustomEvent('cb-copy', {
             bubbles: true,
             composed: true,
@@ -454,6 +456,7 @@ export function createClawButtonClass(harness: HarnessConfig) {
         skillUrl,
         onCopy: (cmd) => {
           this._options.onCopy?.(cmd);
+          recordAgentPreference(harness.id);
           this.dispatchEvent(new CustomEvent('cb-copy', {
             bubbles: true,
             composed: true,
