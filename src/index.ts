@@ -49,4 +49,6 @@ export function register() {
   registerAllButtons();
 }
 
+import './beacon';
+
 export type {} from './jsx.d';

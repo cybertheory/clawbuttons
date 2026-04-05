@@ -1,6 +1,6 @@
 {
   "name": "clawbuttons",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Drop-in \"Run on OpenClaw\", \"Run on Hermes\", \"Run on IronClaw\" and more buttons for any website or framework — covering the full OpenClaw-style harness ecosystem",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -58,6 +58,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
+    "@upstash/redis": "^1.37.0",
     "tsup": "^8.4.0",
     "typescript": "^5.7.0"
   },
